@@ -346,6 +346,7 @@ body {
     flex-direction: column;
     align-items: center;
     height: 100vh;
+    padding: 0 10px;
 }
 
 .wrapper {
@@ -363,6 +364,10 @@ body {
     align-items: center;
     padding: 15px 0;
     gap: 8px;
+}
+
+h1 {
+    text-align: center;
 }
 
 p {
