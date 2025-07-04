@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ship Order Button Animation</title>
+  <meta name="description" content="A creative shipping button animation using HTML, CSS, and SVG. See how a parcel gets shipped with dynamic visual effects.">
+  <meta name="keywords" content="HTML animation, CSS button, SVG animation, shipping button, interactive UI, parcel animation, truck animation">
+  <meta name="author" content="Nishant Sonavane">
+  <meta property="og:title" content="Ship Order Button Animation">
+  <meta property="og:description" content="A creative animated shipping button with parcel and truck animation effects. Built with HTML and CSS.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ship Order Button Animation">
+  <meta name="twitter:description" content="Experience the animated ship order button with parcel and truck motion. A stylish UI demo.">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Helvetica, sans-serif, Arial;
+      background: #FFFDF4;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    .ship-button {
+      position: relative;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+      padding: 20px 40px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      width: 300px;
+      height: 100px;
+      box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    }
+
+    .button-text {
+      transition: opacity 0.3s ease-in-out;
+      z-index: 2;
+      position: relative;
+    }
+
+    .animation-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .parcel {
+      width: 20px;
+      height: 20px;
+      background: orange;
+      border-radius: 3px;
+      position: absolute;
+      left: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 1;
+    }
+
+    .truck {
+      position: absolute;
+      z-index: 1;
+      right: -150px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 108px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      animation: truck-bounce 0.2s ease-in-out 3 alternate 3.3s;
+    }
+
+    @keyframes truck-bounce {
+      0% {
+        transform: translateY(-50%) translateX(0);
+      }
+
+      50% {
+        transform: translateY(-48%) translateX(0);
+      }
+
+      100% {
+        transform: translateY(-50%) translateX(0);
+      }
+    }
+
+    .truck-body {
+      width: 70px;
+      height: 40px;
+      background: linear-gradient(to bottom, #eee, #ddd);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .truck-cabin {
+      width: 30px;
+      height: 30px;
+      background: blue;
+      border-radius: 0 6px 6px 0;
+      margin-left: 5px;
+      position: relative;
+    }
+
+    .truck-cabin::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      width: 3px;
+      height: 22px;
+      background: #2e95a8;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+    }
+
+    .truck-cabin::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      margin: auto;
+      width: 16px;
+      height: 20px;
+      border: 2px solid #000;
+      background: #003;
+      border-radius: 2px 5px 5px 2px;
+    }
+
+    .truck-door {
+      width: 2px;
+      height: 50%;
+      background: linear-gradient(to bottom, #eee, #ddd);
+      position: absolute;
+      transform-origin: left center;
+      opacity: 0;
+    }
+
+    .left-door {
+      left: 0;
+      transform-origin: right center;
+      top: 0;
+    }
+
+    .right-door {
+      left: 0;
+      transform-origin: left center;
+      bottom: 0;
+    }
+
+    .road {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: repeating-linear-gradient(90deg, white, white 10px, transparent 10px, transparent 20px);
+      opacity: 0;
+    }
+
+    .headlights {
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 80px;
+      height: 35px;
+      transform: translateY(-50%);
+      opacity: 0;
+    }
+
+    .headlights .beam {
+      position: absolute;
+      width: 60px;
+      height: 12px;
+      background: radial-gradient(ellipse at left, yellow 0%, rgba(255, 255, 0, 0) 80%);
+    }
+
+    .headlights .beam.left {
+      top: 4px;
+      left: 0;
+    }
+
+    .headlights .beam.right {
+      bottom: 4px;
+      left: 0;
+    }
+
+    .shipped-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+      opacity: 0;
+      z-index: 2;
+    }
+
+    .checkmark {
+      margin-left: 10px;
+    }
+
+    .ship-button.start .button-text {
+      opacity: 0;
+    }
+
+    .ship-button.start .parcel {
+      animation: parcel-slide-in 0.8s ease-out 0.3s forwards, parcel-enter-truck 0.5s ease 1.9s forwards, parcel-hide 0.1s ease 2.6s forwards;
+    }
+
+    .ship-button.start .truck {
+      animation: truck-slide-in 0.8s ease-out 0.3s forwards, truck-drive 1s linear 3.3s forwards, truck-bounce 0.2s ease-in-out 3 alternate 3.3s;
+    }
+
+    .ship-button.start .left-door {
+      animation: door-open-left 0.6s ease 1.3s forwards, door-close-left 0.6s ease 2.7s forwards;
+    }
+
+    .ship-button.start .right-door {
+      animation: door-open-right 0.6s ease 1.3s forwards, door-close-right 0.6s ease 2.7s forwards;
+    }
+
+    .ship-button.start .road {
+      animation: road-appear 0.3s ease 3.0s forwards, road-fade 0.4s ease 4.5s forwards;
+    }
+
+    .ship-button.start .headlights {
+      animation: lights-on 0.3s ease 2.6s forwards, lights-fade 0.4s ease 4.5s forwards;
+    }
+
+    .ship-button.start .shipped-text {
+      animation: show-check 0.4s ease 4.5s forwards;
+    }
+
+    @keyframes parcel-slide-in {
+      to {
+        left: 48px;
+      }
+    }
+
+    @keyframes parcel-enter-truck {
+      to {
+        left: 150px;
+        top: 50%;
+      }
+    }
+
+    @keyframes parcel-hide {
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes truck-slide-in {
+      to {
+        right: 50px;
+      }
+    }
+
+    @keyframes truck-drive {
+      to {
+        right: -200px;
+      }
+    }
+
+    @keyframes door-open-left {
+      to {
+        transform: rotate(85deg);
+        left: -10px;
+        top: -2px;
+        opacity: 1;
+      }
+    }
+
+    @keyframes door-open-right {
+      to {
+        transform: rotate(-85deg);
+        left: -9px;
+        bottom: -4px;
+        opacity: 1;
+      }
+    }
+
+    @keyframes door-close-left {
+      to {
+        transform: rotate(0deg);
+        left: 0;
+        opacity: 0;
+      }
+    }
+
+    @keyframes door-close-right {
+      to {
+        transform: rotate(0deg);
+        left: 0;
+        opacity: 0;
+      }
+    }
+
+    @keyframes road-appear {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes road-fade {
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes lights-on {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes lights-fade {
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes show-check {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .reset-button {
+      background-color: #EAE3C8;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 14px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .credits {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 0;
+      gap: 8px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    a {
+      color: #1864b5;
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Ship Order Button Animation</h1>
+    <div class="wrapper">
+      <button class="ship-button" onclick="startShipping()">
+        <span class="button-text">Ship Order</span>
+        <div class="animation-container">
+          <div class="parcel"></div>
+          <div class="truck">
+            <div class="truck-body">
+              <div class="truck-door left-door"></div>
+              <div class="truck-door right-door"></div>
+            </div>
+            <div class="truck-cabin">
+              <div class="headlights">
+                <div class="beam left"></div>
+                <div class="beam right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="road"></div>
+        </div>
+        <div class="shipped-text"> Order Shipped <span class="checkmark">✓</span></div>
+      </button>
+      <button onclick="location.reload()" class="reset-button">Reset <svg fill="#000000" width="20px" height="20px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <g data-name="Layer 2">
+            <g data-name="refresh">
+              <rect width="24" height="24" opacity="0"></rect>
+              <path d="M20.3 13.43a1 1 0 0 0-1.25.65A7.14 7.14 0 0 1 12.18 19 7.1 7.1 0 0 1 5 12a7.1 7.1 0 0 1 7.18-7 7.26 7.26 0 0 1 4.65 1.67l-2.17-.36a1 1 0 0 0-1.15.83 1 1 0 0 0 .83 1.15l4.24.7h.17a1 1 0 0 0 .34-.06.33.33 0 0 0 .1-.06.78.78 0 0 0 .2-.11l.09-.11c0-.05.09-.09.13-.15s0-.1.05-.14a1.34 1.34 0 0 0 .07-.18l.75-4a1 1 0 0 0-2-.38l-.27 1.45A9.21 9.21 0 0 0 12.18 3 9.1 9.1 0 0 0 3 12a9.1 9.1 0 0 0 9.18 9A9.12 9.12 0 0 0 21 14.68a1 1 0 0 0-.7-1.25z"></path>
+            </g>
+          </g>
+        </svg>
+      </button>
+    </div>
+    <div class="credits">
+      <p>Inspiration: <a href="https://dribbble.com/shots/14120209-Shipping-Animation" target="_blank">Order Shipped 🤝</a></p>
+      <p>Code: <a href="https://github.com/nishantsonavane" target="_blank">Nishant Sonavane</a></p>
+    </div>
+  </div>
+  <script>
+    function startShipping()
+    {
+      const button = document.querySelector('.ship-button');
+      button.classList.add('start');
+    }
+  </script>
+</body>
+
+</html>
